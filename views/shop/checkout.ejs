@@ -1,0 +1,52 @@
+<%- include('../layouts/ejs/head.ejs') %>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+
+<body>
+    <%- include('../layouts/ejs/nav.ejs') %>
+
+    <main>
+        <ul class="card__item-list">
+            <% for(product of products) { %>
+                <li class="card__item">
+                    <h1 class="card__header"><%= product.productId.title %> </h1>
+                    <h2>Quantity: <%= product.quantity %></h2>
+                </li>
+            <% } %>
+        </ul>
+        <h2 class="centered">Total Price: <%= totalPrice %></h2>
+        <div class="centered">   
+            <button class="btn" id="pay-button">Checkout</button>
+            <script type="text/javascript"
+                src="https://app.sandbox.midtrans.com/snap/snap.js"
+                data-client-key="SB-Mid-client-UvQOVdV8XGopt5Rp">
+                // Note: replace with src="https://app.midtrans.com/snap/snap.js" for Production environment
+            </script>
+            <script>
+                // For example trigger on button clicked, or any time you need
+                var payButton = document.getElementById('pay-button');
+                payButton.addEventListener('click', function () {
+                // Trigger snap popup. @TODO: Replace TRANSACTION_TOKEN_HERE with your transaction token
+                window.snap.pay('<%= transactionToken %>', {
+                    onSuccess: function(result) {
+                        alert('Success')
+                        window.location.replace("http://localhost:3000/orders");
+                    },
+                    onPending: function(result) {
+                        alert('Pending')
+                        window.location.replace("http://localhost:3000/cart");
+                    },
+                    onError: function(result) {
+                        alert('An Error Occur')
+                        window.location.replace("http://localhost:3000/500");
+                    },
+                    onClose: function(result) {
+                        alert('Cancel')
+                    }
+                });
+                // customer will be redirected after completing payment pop-up
+                });
+            </script>
+        </div>
+    </main>
+<%- include('../layouts/ejs/end.ejs') %>

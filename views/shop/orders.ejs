@@ -1,0 +1,50 @@
+<%- include('../layouts/ejs/head.ejs') %>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+
+<body>
+    <%- include('../layouts/ejs/nav.ejs') %>
+    <main>
+        <% if(orders.length > 0) { %>
+            <% for(order of orders) { %>
+                <ul class="card">
+                    <li class="card__content">
+                        <!-- This code use with mongoose database where order is in seperate file with user (a bit different from mongodb) / with a bit diffenret variable name -->
+                        <h1>Order -# <%= order._id %> <a href="/invoice/<%= order._id %>">Invoice</a></h1>
+                        <ul class="orders">
+                            <% order.products.forEach(p => { %> <!-- the .products come order database -->
+                                <li class="orders__item">
+                                    <%= p.product.title %> (<%= p.quantity %>) <!-- getting all product information from database to display -->
+                                </li>
+                            <% }); %>
+                        </ul>
+                        
+                        <!-- This code use with mongodb database where the collection named the id as an _id -->
+                        <!-- note: every ejs syntax is deleted caused by error with or without comment in this case -->
+                        <!-- <h1>Order -# < order._id > </h1> -->
+                        <!-- <ul class="orders"> -->
+                            <!-- < order.items.forEach(product => { > <!-- the .items come order database -->
+                                <!-- <li class="orders__item"> -->
+                                    <!-- < product.title > (< product.quantity >) <!-- getting all product information from database to display -->
+                                <!-- </li>
+                            < }); >
+                        </ul> -->
+                        
+                        <!-- This code use with sequelize database where the table has a column name an id -->
+                        <!-- <h1> < order.id %> </h1> -->
+                        <!-- <ul> -->
+                            <!-- This code has .products from sequelize to get all products from getOrders -->
+                            <!-- < order.products.forEach(product => { > <!-- the .products come from controller that includes from getOrders -->
+                                <!-- <li>
+                                    < product.title %> (< product.orderItem.quantity >) <!-- by passing the product model, orderItem model is now available by asociation -->
+                                <!-- </li>
+                            < }); >
+                        </ul> -->
+                    </li>
+                </ul>
+            <% } %>
+        <% } else { %>
+            <h1>Nothing there!</h1>
+        <% } %>
+    </main>
+<%- include('../layouts/ejs/end.ejs') %>

@@ -1,0 +1,54 @@
+<%- include('../layouts/ejs/head.ejs') %>
+    <link rel="stylesheet" href="/css/product.css">
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+
+    <body>
+        <%- include('../layouts/ejs/nav.ejs') %>
+
+            <main>
+                <% if (prods.length > 0) { %>
+                    <div class="grid">
+                        <% for (let product of prods) { %>
+                            <article class="card product-item">
+                                <header class="card__header">
+                                    <h1 class="product__title">
+                                        <%= product.title %>
+                                    </h1>
+                                </header>
+                                <div class="card__image">
+                                    <img class="product-img" src="<%= product.image %>" alt="<%= product.title %>">
+                                </div>
+                                <div class="card__content">
+                                    <h2 class="product__price">$
+                                        <%= product.price %>
+                                    </h2>
+                                    <p class="product__description">
+                                        <%= product.description %>
+                                    </p>
+                                </div>
+                                <div class="card__actions">
+                                    <!-- This code use with mongodb database where the collection named the id as an _id -->
+                                    <a href="/admin/edit-product/<%= product._id %>?edit=true" class="btn">Edit</a>
+                                    <!-- This code use with sequelize database where the table has a column name an id -->
+                                    <!-- <a href="/admin/edit-product/<%= product.id %>?edit=true" class="btn">Edit</a> -->
+                                    <form action="/admin/delete-product" method="POST">
+                                        <button class="btn" type="submit">Delete</button>
+                                        <!-- This code use with mongodb database where the collection named the id as an _id -->
+                                        <input type="hidden" name="productId" value="<%= product._id %>">
+                                        <!-- This code use with sequelize database where the table has a column name an id -->
+                                        <!-- <input type="hidden" name="productId" value="<%= product.id %>"> -->
+                                         
+                                        <!-- the name attribute has to be exact "_csrf" because that's the value that passed to controller by csrf-csrf -->
+                                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                    </form>
+                                </div>
+                            </article>
+                        <% } %>
+                    </div>
+                    <%- include('../layouts/ejs/pagination.ejs', {currentPage: currentPage, hasNextPage: hasNextPage, hasPreviousPage: hasPreviousPage, nextPage: nextPage, previousPage: previousPage, lastPage: lastPage}) %>
+                <% } else { %>
+                    <h1>No Products Found!</h1>
+                <% } %>
+            </main>
+<%- include('../layouts/ejs/end.ejs') %>

@@ -1,0 +1,46 @@
+<%- include('../layouts/ejs/head.ejs') %>
+    <link rel="stylesheet" href="/css/product.css">
+    <link rel="stylesheet" href="/css/forms.css">
+</head>
+
+<body>
+   <%- include('../layouts/ejs/nav.ejs') %>
+
+    <main>
+        <% if(message) { %>
+            <div class="user-message user-message--error"><%= message %></div>
+        <% } %>
+        <form class="product-form" action="/admin/<% if(editing) { %>edit-product<% } else { %>add-product<% } %>" method="POST" enctype="multipart/form-data">
+            <div class="form-control">
+                <label for="title">Title</label>
+                <input type="text" name="title" id="title" value="<% if(editing || hasError) { %><%= product.title %><% } %>" class="<%= errorValidation.find(e => e.path === 'title') ? 'invalid' : '' %>">
+            </div>
+            <!-- <div class="form-control">
+                <label for="imageURL">Image URL</label>
+                <input type="text" name="imageUrl" id="imageUrl" value="< if(editing || hasError) { >< product.imageUrl >< } >" class="< errorValidation.find(e => e.path === 'imageUrl') ? 'invalid' : '' >">
+            </div> -->
+            <div class="form-control">
+                <label for="image">Image</label>
+                <input type="file" name="image" id="image" class="<%= errorValidation.find(e => e.path === 'image') ? 'invalid' : '' %>">
+            </div>
+            <div class="form-control">
+                <label for="price">Price</label>
+                <input type="number" name="price" id="price" step="0.01" value="<% if(editing || hasError) { %><%= product.price %><% } %>" class="<%= errorValidation.find(e => e.path === 'price') ? 'invalid' : '' %>">
+            </div>
+            <div class="form-control">
+                <label for="description">Description</label>
+                <textarea name="description" id="description" rows="5" class="<%= errorValidation.find(e => e.path === 'description') ? 'invalid' : '' %>"><% if(editing || hasError) { %><%= product.description %><% } %></textarea>
+            </div>
+            <% if(editing) { %>
+                <!-- This code use with mongodb database where the collection named the id as an _id -->
+                <input type="hidden" name="productId" value="<%= product._id %>">
+                <!-- This code use with sequelize database where the table has a column name an id -->
+                <!-- <input type="hidden" name="productId" value="<%= product.id %>"> -->
+            <% } %>
+
+            <!-- the name attribute has to be exact "_csrf" because that's the value that passed to controller by csrf-csrf -->
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button class="btn" type="submit"> <% if(editing) { %>Update Product<% } else { %>Add Product<% } %></button>
+        </form>
+    </main>
+<%- include('../layouts/ejs/end.ejs') %>

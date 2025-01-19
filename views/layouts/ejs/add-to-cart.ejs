@@ -1,0 +1,12 @@
+<% if(isAuthenticated) { %>
+    <form action="/cart" method="POST">
+        <button type="submmit" class="btn">Add to Cart</button>
+        <!-- This code use with mongodb database where the collection named the id as an _id -->
+        <input type="hidden" name="prodId" value="<%= product._id %>">
+        <!-- This code use with sequelize database where the table has a column name an id -->
+        <!-- <input type="hidden" name="prodId" value="<%= product.id %>"> -->
+         
+        <!-- the name attribute has to be exact "_csrf" because that's the value that passed to controller by csrf-csrf -->
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    </form>
+<% } %>

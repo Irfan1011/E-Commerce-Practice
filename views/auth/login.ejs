@@ -1,0 +1,31 @@
+<%- include('../layouts/ejs/head.ejs') %>
+    <link rel="stylesheet" href="/css/forms.css">
+    <link rel="stylesheet" href="/css/auth.css">
+</head>
+
+<body>
+    <%- include('../layouts/ejs/nav.ejs') %>
+
+    <main>
+        <% if(message) { %>
+            <div class="user-message <%= type === 'error' ? 'user-message--error' : 'user-message--success' %>"><%= message %></div>
+        <% } %>
+        <form class="login-form" action="/login %>" method="POST">
+            <div class="form-control">
+                <label for="email">E-Mail</label>
+                <input type="email" name="email" id="email" value="<%= oldValue.email %>" class="<%= errorValidation.find(e => e.path === 'email') ? 'invalid' : '' %>">
+            </div>
+            <div class="form-control">
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" value="<%= oldValue.password %>" class="<%= errorValidation.find(e => e.path === 'password') ? 'invalid' : '' %>">
+            </div>
+
+            <!-- the name attribute has to be exact "_csrf" because that's the value that passed to controller by csrf-csrf -->
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button class="btn" type="submit">Login</button>
+        </form>
+        <div class="centered">
+            <a href="/reset">Reset Password</a>
+        </div>
+    </main>
+<%- include('../layouts/ejs/end.ejs') %>

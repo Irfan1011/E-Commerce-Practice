@@ -1,0 +1,77 @@
+<%- include('../layouts/ejs/head.ejs') %>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+
+<body>
+    <%- include('../layouts/ejs/nav.ejs') %>
+
+    <!-- This code use without database, therefore the data stored in productData (an object) -->
+    <!-- note: every ejs syntax is deleted caused by error with or without comment in this case -->
+    <!-- <main>
+        <% if(products.length > 0) { %>
+            <ul>
+                <% for(product of products) { %>
+                    <li>
+                        <p>< product.productData.title > (< product.qty>)</p>
+                        <form action="/cart-delete" method="POST">
+                            <input type="hidden" value="< product.productData.id >" name="productId">
+                            <button class="btn" type="submit">Delete</button>
+                        </form>
+                    </li>
+                <% } %>
+            </ul>
+        <% } else { %>
+            <h1>Cart is Empty</h1>
+        <% } %>
+    </main> -->
+
+    <main>
+        <% if(products.length > 0) { %>
+            <ul class="card__item-list">
+                <% for(product of products) { %>
+                    <li class="card__item">
+                        <!-- The product come from controller and CartItem come from model (sequelize)-->
+                        <!-- <h1 class="card__header">< product.CartItem.title > </h1> -->
+
+                        <!-- This doesn't have cartItem because in mongodb database cart item is already in the same collection -->
+                        <!-- <h1 class="card__header">< product.title > </h1> -->
+
+                        <!-- This have to use productId because in mongoose title is in low level (still nested in product object) -->
+                        <h1 class="card__header"><%= product.productId.title %> </h1>
+                        
+                        <!-- CartItem come from model that used sequelize -->
+                        <!-- <h2>Quantity: < product.CartItem.quantity ></h2> -->
+                         
+                        <!-- The quantity in mongodb and mongoose is already in top level (not a nested product object) therefore no need to add productId -->
+                        <h2>Quantity: <%= product.quantity %></h2>
+
+                        <form action="/cart-delete" method="POST">
+                            <!-- This code use with sequelize database where the table has a column name an id -->
+                            <!-- <input type="hidden" value="< product.id >" name="productId"> -->
+
+                            <!-- This code use with mongodb database where the collection named the id as an _id -->
+                            <!-- <input type="hidden" value="< product._id >" name="productId"> -->
+
+                            <!-- This code use with mongoose database where the product id is in nested product object, therefore need to add .productId -->
+                            <input type="hidden" value="<%= product.productId._id %>" name="productId">
+                            
+                            <!-- the name attribute has to be exact "_csrf" because that's the value that passed to controller by csrf-csrf -->
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                            <button class="btn danger" type="submit">Delete</button>
+                        </form>
+                    </li>
+                <% } %>
+            </ul>
+            <div class="centered">   
+                <!-- <form action="/create-order" method="POST" class="centered"> -->
+                    <!-- the name attribute has to be exact "_csrf" because that's the value that passed to controller by csrf-csrf -->
+                    <!-- <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <button class="btn" type="submit" id="checkout">Order Now</button>
+                </form> -->
+                <a href="/checkout" id="checkout" class="btn">Order Now</a>
+            </div>
+        <% } else { %>
+            <h1>Cart is Empty</h1>
+        <% } %>
+    </main>
+<%- include('../layouts/ejs/end.ejs') %>

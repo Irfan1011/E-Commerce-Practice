@@ -1,0 +1,19 @@
+<%- include('../layouts/ejs/head.ejs') %>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/product.css">
+</head>
+
+<body>
+    <%- include('../layouts/ejs/nav.ejs') %>
+    <main class="centered">
+        <h1><%= prods.title %></h1>
+        <hr>
+        <div class="product-img">
+            <img src="<%= prods.image %>" alt="<%= prods.title %>">
+        </div>
+        <h2><%= prods.price %></h2>
+        <p><%= prods.description %></p>
+        <%- include('../layouts/ejs/add-to-cart.ejs', {product: prods}) %>
+        <!-- The product on "include('../layouts/ejs/add-to-cart.ejs', {product: prods})" is a variable to pass in 'add-to-cart' ejs file. While the prods is a value to be pass from this file  -->
+    </main>
+<%- include('../layouts/ejs/end.ejs') %>
